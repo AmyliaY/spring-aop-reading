@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin/main" path="src/main/java"/>
+	<classpathentry kind="src" output="bin/main" path="src/main/resources"/>
+	<classpathentry kind="src" output="bin/test" path="src/test/java"/>
+	<classpathentry kind="src" output="bin/test" path="src/test/resources"/>
+	<classpathentry exported="true" kind="src" path="/spring-core"/>
+	<classpathentry exported="true" kind="src" path="/spring-beans"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/jar/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/source/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/com.jamonapi/jamon/2.4/jar/e2ad6f45c2ba72d8fa798b68a5f9b73c9f047756/jamon-2.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/commons-pool/commons-pool/1.5.3/jar/7ad440d63c6eea5e79f1737e264810c76258d042/commons-pool-1.5.3.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/commons-pool/commons-pool/1.5.3/source/7c4d461b6574f056e1d4fc6daa16821382b53bef/commons-pool-1.5.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.2/jar/d3b191a99d2c34dfd5311ef3110f096f5bc0a10e/aspectjweaver-1.7.2.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.2/source/56ab34b488e1c1f67b95c1980839ed643963b34b/aspectjweaver-1.7.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/junit/junit/4.11/jar/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/junit/junit/4.11/source/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-all/1.3/jar/63a21ebc981131004ad02e0434e799fd7f3a8d5a/hamcrest-all-1.3.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-all/1.3/source/47e033b7ab18c5dbd5fe29fc1bd5a40afe028818/hamcrest-all-1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-core/1.9.5/jar/c3264abeea62c4d2f367e21484fbb40c7e256393/mockito-core-1.9.5.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.mockito/mockito-core/1.9.5/source/46f703fb4266140c544d48a189cb25947eb6333e/mockito-core-1.9.5-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-core/1.3/jar/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.hamcrest/hamcrest-core/1.3/source/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.0/jar/9b473564e792c2bdf1449da1f0b1b5bff9805704/objenesis-1.0.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.objenesis/objenesis/1.0/source/b10c90e57b7bb985a7b6a704769428fe5c2a732c/objenesis-1.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="G:/WORKSPACE/spring-framework-3.2.6.RELEASE/spring-core/build/libs/spring-cglib-repack-3.0.jar"/>
+	<classpathentry kind="con" path="com.genuitec.runtime.library/com.genuitec.generic_1.3">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.utility"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="spring-aop/bin/eclipse"/>
+</classpath>
