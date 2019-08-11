@@ -145,39 +145,40 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 
 
 	public Object proceed() throws Throwable {
-		//	We start with an index of -1 and increment early.
+		//从索引为-1的拦截器开始调用，并按序递增
+		
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+			//如果拦截器链中的拦截器都递归调用完毕，则在invokeJoinpoint()方法中通过AopUtils
+			//实现对目标对象target中目标方法的调用
 			return invokeJoinpoint();
 		}
 
+		//这里沿着定义好的interceptorsAndDynamicMethodMatchers拦截器链进行处理，
+		//interceptorsAndDynamicMethodMatchers是一个List，interceptorOrInterceptionAdvice
+		//是其中的一个元素，
 		Object interceptorOrInterceptionAdvice =
 				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
-			// Evaluate dynamic method matcher here: static part will already have
-			// been evaluated and found to match.
-			InterceptorAndDynamicMethodMatcher dm =
-					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
+			//这里对拦截器进行动态方法匹配的判断，触发对Pointcut的匹配，
+			//如果和配置的Pointcut匹配，那么这个advice将会被执行
+			InterceptorAndDynamicMethodMatcher dm = (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
 			if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
 				return dm.interceptor.invoke(this);
 			}
 			else {
-				// Dynamic matching failed.
-				// Skip this interceptor and invoke the next in the chain.
+				//如果不匹配，那么process()方法会被递归调用，直到所有的拦截器都被运行过为止
 				return proceed();
 			}
 		}
 		else {
-			// It's an interceptor, so we just invoke it: The pointcut will have
-			// been evaluated statically before this object was constructed.
+			//如果interceptorOrInterceptionAdvice是一个MethodInterceptor
+			//则直接调用其对应的方法
 			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}
 
 	/**
-	 * Invoke the joinpoint using reflection.
-	 * Subclasses can override this to use custom invocation.
-	 * @return the return value of the joinpoint
-	 * @throws Throwable if invoking the joinpoint resulted in an exception
+	 * 通过反射机制完成对横切点方法的调用
 	 */
 	protected Object invokeJoinpoint() throws Throwable {
 		return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);

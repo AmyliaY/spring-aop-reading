@@ -116,6 +116,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 	private transient boolean classLoaderConfigured = false;
 
+	//实现了BeanFactoryAware接口，持有了对BeanFactory的引用，实现了BeanFactoryAware接口的setBeanFactory()方法
 	private transient BeanFactory beanFactory;
 
 	/** Whether the advisor chain has already been initialized */
@@ -401,8 +402,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
-	 * 创建Advisor（拦截器）链。每次添加新的原型实例时，都将刷新源于BeanFactory的Advisor。
-	 * 通过工厂API以编程方式添加的拦截器不受此类更改的影响
+	 * 初始化Advisor链，可以发现，其中有通过对IoC容器的getBean()方法的调用来获取配置好的advisor通知器
 	 */
 	private synchronized void initializeAdvisorChain() throws AopConfigException, BeansException {
 		if (this.advisorChainInitialized) {
@@ -437,14 +437,15 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 				}
 
 				else {
-					// 如果我们到了这里，我们需要添加一个命名的拦截器。我们必须检查它是单例还是原型
+					//对当前的factoryBean进行类型判断，是属于单例bean还是原型bean
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {
-						// 将真正的Advisor/Advice添加到链中
+						//通过beanFactory的getBean()方法获取advisor，
+						//这个name是从interceptorNames中获取的
 						advice = this.beanFactory.getBean(name);
 					}
 					else {
-						// 这是一个原型Advice or Advisor：替换为原型。避免不必要地为Advisor链初始化创建原型bean
+						//如果是原型bean
 						advice = new PrototypePlaceholderAdvisor(name);
 					}
 					addAdvisorOnChainCreation(advice, name);

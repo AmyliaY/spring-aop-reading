@@ -48,10 +48,9 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 	public List<Object> getInterceptorsAndDynamicInterceptionAdvice(
 			Advised config, Method method, Class targetClass) {
-
-		// This is somewhat tricky... we have to process introductions first,
-		// but we need to preserve order in the ultimate list.
+		//advisor链已经在传进来的config中持有了，这里可以直接使用
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
+		//判断config中的Advisors是否符合配置要求
 		boolean hasIntroductions = hasMatchingIntroductions(config, targetClass);
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 		for (Advisor advisor : config.getAdvisors()) {
@@ -59,8 +58,11 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(targetClass)) {
+					//拦截器链是通过AdvisorAdapterRegistry的实例对象registry来加入的，
+					//AdvisorAdapterRegistry对advisor的织入起到了很大的作用
 					MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
+					//使用MethodMatchers的matches()方法进行匹配判断
 					if (MethodMatchers.matches(mm, method, targetClass, hasIntroductions)) {
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
@@ -91,7 +93,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 	}
 
 	/**
-	 * Determine whether the Advisors contain matching introductions.
+	 * 判断config中的Advisors是否符合配置要求
 	 */
 	private static boolean hasMatchingIntroductions(Advised config, Class targetClass) {
 		for (int i = 0; i < config.getAdvisors().length; i++) {

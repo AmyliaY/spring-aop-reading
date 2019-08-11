@@ -616,15 +616,18 @@ final class CglibAopProxy implements AopProxy, Serializable {
 				if (target != null) {
 					targetClass = target.getClass();
 				}
-				//从advice中获取配置好的AOP通知
+				//从advice对象中获取配置好的拦截器链，advised是一个AdvisedSupport对象，
+				//而AdvisedSupport也是ProxyFactoryBean的父类之一。
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
-				//如果没有AOP通知配置，那么直接调用target对象的调用方法
+				//如果没有配置AOP通知，那么直接使用CGLIB的MethodProxy对象完成对目标方法的调用
 				if (chain.isEmpty() && Modifier.isPublic(method.getModifiers())) {
 					retVal = methodProxy.invoke(target, args);
 				}
 				else {
-					//通过CglibMethodInvocation来启动advice通知
+					//通过CglibMethodInvocation来启动advice通知，
+					//CglibMethodInvocation是ReflectiveMethodInvocation的子类
+					//最终还是调用的ReflectiveMethodInvocation对象的proceed()方法
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);

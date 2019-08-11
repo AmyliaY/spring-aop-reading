@@ -300,13 +300,7 @@ public abstract class AopUtils {
 
 
 	/**
-	 * Invoke the given target via reflection, as part of an AOP method invocation.
-	 * @param target the target object
-	 * @param method the method to invoke
-	 * @param args the arguments for the method
-	 * @return the invocation result, if any
-	 * @throws Throwable if thrown by the target method
-	 * @throws org.springframework.aop.AopInvocationException in case of a reflection error
+	 * 使用spring的反射机制，调用method的invoke方法
 	 */
 	public static Object invokeJoinpointUsingReflection(Object target, Method method, Object[] args)
 			throws Throwable {
