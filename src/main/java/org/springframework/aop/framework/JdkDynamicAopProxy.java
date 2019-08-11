@@ -157,8 +157,9 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		Object target = null;
 
 		try {
+			//如果目标对象调用的是Obejct中的基本方法，equals、hashCode则进行相应的处理
 			if (!this.equalsDefined && AopUtils.isEqualsMethod(method)) {
-				// The target does not implement the equals(Object) method itself.
+				// 如果目标对象没有实现Object类的基本方法：equals(Object other)
 				return equals(args[0]);
 			}
 			if (!this.hashCodeDefined && AopUtils.isHashCodeMethod(method)) {
@@ -231,9 +232,8 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 
 	/**
-	 * Equality means interfaces, advisors and TargetSource are equal.
-	 * <p>The compared object may be a JdkDynamicAopProxy instance itself
-	 * or a dynamic proxy wrapping a JdkDynamicAopProxy instance.
+	 * 相等意味着接口、advisors和TargetSource相等，
+	 * 比较对象可以是JdkDynamicAopProxy实例本身，也可以是包装JdkDynamicAopProxy实例的动态代理
 	 */
 	@Override
 	public boolean equals(Object other) {
