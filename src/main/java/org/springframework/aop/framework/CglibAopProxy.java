@@ -52,6 +52,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 里面封装了很多不同类型的Interceptor私有静态内部类
+ * private static内部类也可以实现单例模式
  * CGLIB-based {@link AopProxy} implementation for the Spring AOP framework.
  *
  * <p>Formerly named {@code Cglib2AopProxy}, as of Spring 3.2, this class depends on
@@ -590,8 +592,7 @@ final class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
-	 * General purpose AOP callback. Used when the target is dynamic or when the
-	 * proxy is not frozen.
+	 * 通用AOP回调，当target是动态的或代理未冻结时使用
 	 */
 	private static class DynamicAdvisedInterceptor implements MethodInterceptor, Serializable {
 
@@ -608,29 +609,22 @@ final class CglibAopProxy implements AopProxy, Serializable {
 			Object target = null;
 			try {
 				if (this.advised.exposeProxy) {
-					// Make invocation available if necessary.
 					oldProxy = AopContext.setCurrentProxy(proxy);
 					setProxyContext = true;
 				}
-				// May be null Get as late as possible to minimize the time we
-				// "own" the target, in case it comes from a pool.
 				target = getTarget();
 				if (target != null) {
 					targetClass = target.getClass();
 				}
+				//从advice中获取配置好的AOP通知
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
-				// Check whether we only have one InvokerInterceptor: that is,
-				// no real advice, but just reflective invocation of the target.
+				//如果没有AOP通知配置，那么直接调用target对象的调用方法
 				if (chain.isEmpty() && Modifier.isPublic(method.getModifiers())) {
-					// We can skip creating a MethodInvocation: just invoke the target directly.
-					// Note that the final invoker must be an InvokerInterceptor, so we know
-					// it does nothing but a reflective operation on the target, and no hot
-					// swapping or fancy proxying.
 					retVal = methodProxy.invoke(target, args);
 				}
 				else {
-					// We need to create a method invocation...
+					//通过CglibMethodInvocation来启动advice通知
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);

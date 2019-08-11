@@ -4,9 +4,9 @@
 	<classpathentry kind="src" output="bin/main" path="src/main/resources"/>
 	<classpathentry kind="src" output="bin/test" path="src/test/java"/>
 	<classpathentry kind="src" output="bin/test" path="src/test/resources"/>
-	<classpathentry exported="true" kind="src" path="/spring-core"/>
-	<classpathentry exported="true" kind="src" path="/spring-beans"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/jar/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/source/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar"/>
+	<classpathentry kind="src" path="/spring-core"/>
+	<classpathentry kind="src" path="/spring-beans"/>
+	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/jar/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/aopalliance/aopalliance/1.0/source/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/com.jamonapi/jamon/2.4/jar/e2ad6f45c2ba72d8fa798b68a5f9b73c9f047756/jamon-2.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/commons-pool/commons-pool/1.5.3/jar/7ad440d63c6eea5e79f1737e264810c76258d042/commons-pool-1.5.3.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/commons-pool/commons-pool/1.5.3/source/7c4d461b6574f056e1d4fc6daa16821382b53bef/commons-pool-1.5.3-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.2/jar/d3b191a99d2c34dfd5311ef3110f096f5bc0a10e/aspectjweaver-1.7.2.jar" sourcepath="C:/Users/Tanyongde/.gradle/caches/artifacts-24/filestore/org.aspectj/aspectjweaver/1.7.2/source/56ab34b488e1c1f67b95c1980839ed643963b34b/aspectjweaver-1.7.2-sources.jar"/>
