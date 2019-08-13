@@ -300,19 +300,18 @@ public abstract class AopUtils {
 
 
 	/**
-	 * 使用spring的反射机制，调用method的invoke方法
+	 * 使用spring的反射机制，调用目标方法method的invoke方法
 	 */
 	public static Object invokeJoinpointUsingReflection(Object target, Method method, Object[] args)
 			throws Throwable {
 
-		// Use reflection to invoke the method.
 		try {
+			//如果method是private等不可访问状态，则设置为public公开可访问
 			ReflectionUtils.makeAccessible(method);
+			//最后利用反射完成调用
 			return method.invoke(target, args);
 		}
 		catch (InvocationTargetException ex) {
-			// Invoked method threw a checked exception.
-			// We must rethrow it. The client won't see the interceptor.
 			throw ex.getTargetException();
 		}
 		catch (IllegalArgumentException ex) {

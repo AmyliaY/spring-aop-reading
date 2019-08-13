@@ -50,6 +50,9 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		//AopProxy代理对象的生成过程：
+		//首先从AdvisedSupport对象中获取配置的target目标对象的类型targetClass，
+		//然后根据targetClass是否为接口采取不同的生成代理对象的策略
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class targetClass = config.getTargetClass();
 			if (targetClass == null) {

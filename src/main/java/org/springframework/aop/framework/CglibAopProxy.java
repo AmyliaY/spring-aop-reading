@@ -170,10 +170,9 @@ final class CglibAopProxy implements AopProxy, Serializable {
 				}
 			}
 
-			// Validate the class, writing log messages as necessary.
 			validateClassIfNecessary(proxySuperClass);
 
-			// Configure CGLIB Enhancer...
+			//创建并配置Enhancer对象，Enhancer是CGLIB中主要的操作类
 			Enhancer enhancer = createEnhancer();
 			if (classLoader != null) {
 				enhancer.setClassLoader(classLoader);
@@ -198,7 +197,7 @@ final class CglibAopProxy implements AopProxy, Serializable {
 			}
 			enhancer.setCallbackTypes(types);
 
-			// Generate the proxy class and create a proxy instance.
+			//通过enhancer生成代理对象
 			Object proxy;
 			if (this.constructorArgs != null) {
 				proxy = enhancer.create(this.constructorArgTypes, this.constructorArgs);

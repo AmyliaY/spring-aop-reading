@@ -232,9 +232,8 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 
 	/**
-	 * 返回一个代理对象，当用户从工厂bean中获取beans时调用，
+	 * 返回一个代理对象，当用户从FactoryBean中获取bean时调用，
 	 * 创建此工厂要返回的AOP代理的实例，该实例将作为一个单例被缓存
-	 * 返回反映此工厂当前状态的新AOP代理
 	 */
 	public Object getObject() throws BeansException {
 		//初始化通知器链
@@ -304,18 +303,26 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 		if (this.singletonInstance == null) {
 			this.targetSource = freshTargetSource();
 			if (this.autodetectInterfaces && getProxiedInterfaces().length == 0 && !isProxyTargetClass()) {
-				// 依靠AOP基础设施告诉我们代理的接口
+				//根据AOP框架来判断需要代理的接口
 				Class targetClass = getTargetClass();
 				if (targetClass == null) {
 					throw new FactoryBeanNotInitializedException("Cannot determine target class for proxy");
 				}
+				//设置代理对象的接口
 				setInterfaces(ClassUtils.getAllInterfacesForClass(targetClass, this.proxyClassLoader));
 			}
-			// 初始化共享的单一实例
 			super.setFrozen(this.freezeProxy);
+			//这里会通过AopProxy来得到代理对象
 			this.singletonInstance = getProxy(createAopProxy());
 		}
 		return this.singletonInstance;
+	}
+	
+	/**
+	 * 通过createAopProxy()方法返回的aopProxy获取代理对象
+	 */
+	protected Object getProxy(AopProxy aopProxy) {
+		return aopProxy.getProxy(this.proxyClassLoader);
 	}
 
 	/**
@@ -347,13 +354,6 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 			logger.trace("Using ProxyCreatorSupport copy: " + copy);
 		}
 		return getProxy(copy.createAopProxy());
-	}
-
-	/**
-	 * 返回要公开的代理对象
-	 */
-	protected Object getProxy(AopProxy aopProxy) {
-		return aopProxy.getProxy(this.proxyClassLoader);
 	}
 
 	/**
@@ -405,6 +405,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * 初始化Advisor链，可以发现，其中有通过对IoC容器的getBean()方法的调用来获取配置好的advisor通知器
 	 */
 	private synchronized void initializeAdvisorChain() throws AopConfigException, BeansException {
+		//如果通知器链已经完成初始化，则直接返回
 		if (this.advisorChainInitialized) {
 			return;
 		}
@@ -415,13 +416,13 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 						"- cannot resolve interceptor names " + Arrays.asList(this.interceptorNames));
 			}
 
-			// 除非使用属性指定TargetSource，否则Globals不能是最后
 			if (this.interceptorNames[this.interceptorNames.length - 1].endsWith(GLOBAL_SUFFIX) &&
 					this.targetName == null && this.targetSource == EMPTY_TARGET_SOURCE) {
 				throw new AopConfigException("Target required after globals");
 			}
 
-			// 从bean名称实现拦截器链
+			//这里添加了Advisor链的调用，下面的interceptorNames是在配置文件中
+			//通过interceptorNames进行配置的
 			for (String name : this.interceptorNames) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Configuring advisor or advice '" + name + "'");

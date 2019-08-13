@@ -35,32 +35,20 @@ import org.springframework.aop.Pointcut;
  * @see #setAdvice
  */
 @SuppressWarnings("serial")
+
 public class DefaultPointcutAdvisor extends AbstractGenericPointcutAdvisor implements Serializable {
 
 	private Pointcut pointcut = Pointcut.TRUE;
 
-
-	/**
-	 * Create an empty DefaultPointcutAdvisor.
-	 * <p>Advice must be set before use using setter methods.
-	 * Pointcut will normally be set also, but defaults to {@code Pointcut.TRUE}.
-	 */
 	public DefaultPointcutAdvisor() {
 	}
 
-	/**
-	 * Create a DefaultPointcutAdvisor that matches all methods.
-	 * <p>{@code Pointcut.TRUE} will be used as Pointcut.
-	 * @param advice the Advice to use
-	 */
 	public DefaultPointcutAdvisor(Advice advice) {
 		this(Pointcut.TRUE, advice);
 	}
 
 	/**
-	 * Create a DefaultPointcutAdvisor, specifying Pointcut and Advice.
-	 * @param pointcut the Pointcut targeting the Advice
-	 * @param advice the Advice to run when Pointcut matches
+	 * 自己定义了Pointcut，Advice则使用父类中的定义
 	 */
 	public DefaultPointcutAdvisor(Pointcut pointcut, Advice advice) {
 		this.pointcut = pointcut;
