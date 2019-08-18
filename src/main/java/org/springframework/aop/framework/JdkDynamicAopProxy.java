@@ -96,7 +96,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		if (config.getAdvisors().length == 0 && config.getTargetSource() == AdvisedSupport.EMPTY_TARGET_SOURCE) {
 			throw new AopConfigException("No advisors and no TargetSource specified");
 		}
-		//这个advised是一个AdvisedSupport对象，可以通过它获取被代理对象target
+		//这个advised是一个AdvisedSupport对象，可以通过它获取被代理对象target，
 		//这样，在invoke()被代理对象aopProxy调用时就可以调用target的目标方法了
 		this.advised = config;
 	}

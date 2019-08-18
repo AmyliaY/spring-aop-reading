@@ -86,7 +86,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 			interceptors.add((MethodInterceptor) advice);
 		}
 		
-		//对advice的类型进行适配，使用已经配置好的三种AdvisorAdapter，然后从对应的
+		//对advice的类型进行适配，使用adapters中已经配置好的三种AdvisorAdapter，然后从对应的
 		//adapter中取出封装好的AOP编织功能的拦截器
 		for (AdvisorAdapter adapter : this.adapters) {
 			//adapter.supportsAdvice(advice)方法中对advice的
