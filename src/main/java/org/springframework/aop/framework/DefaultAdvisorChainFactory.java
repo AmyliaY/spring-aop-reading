@@ -48,25 +48,28 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 	public List<Object> getInterceptorsAndDynamicInterceptionAdvice(
 			Advised config, Method method, Class targetClass) {
+		
 		//advisor链已经在传进来的config中持有了，这里可以直接使用
+		//advisor中持有切面 和 增强行为的引用
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
 		//判断config中的Advisors是否符合配置要求
 		boolean hasIntroductions = hasMatchingIntroductions(config, targetClass);
+		
+		//获取注册器，这是一个单例模式的实现
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 		for (Advisor advisor : config.getAdvisors()) {
+			//advisor如果是PointcutAdvisor的实例
 			if (advisor instanceof PointcutAdvisor) {
-				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(targetClass)) {
 					//拦截器链是通过AdvisorAdapterRegistry的实例对象registry来加入的，
 					//AdvisorAdapterRegistry对advisor的织入起到了很大的作用
 					MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
+					//从pointcutAdvisor中获取切面的方法匹配器
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
-					//使用MethodMatchers的matches()方法进行匹配判断
+					//使用MethodMatchers的matches()方法对目标类的目标方法进行匹配判断
 					if (MethodMatchers.matches(mm, method, targetClass, hasIntroductions)) {
 						if (mm.isRuntime()) {
-							// Creating a new object instance in the getInterceptors() method
-							// isn't a problem as we normally cache created chains.
 							for (MethodInterceptor interceptor : interceptors) {
 								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
 							}
@@ -77,6 +80,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					}
 				}
 			}
+			//advisor如果是IntroductionAdvisor的实例
 			else if (advisor instanceof IntroductionAdvisor) {
 				IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
 				if (config.isPreFiltered() || ia.getClassFilter().matches(targetClass)) {

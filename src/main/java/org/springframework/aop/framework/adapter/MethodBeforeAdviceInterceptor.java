@@ -36,7 +36,6 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 	private MethodBeforeAdvice advice;
 
-
 	/**
 	 * 为指定的advice创建对应的MethodBeforeAdviceInterceptor对象
 	 */

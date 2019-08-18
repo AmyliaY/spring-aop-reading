@@ -422,7 +422,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 			}
 
 			//这里添加了Advisor链的调用，下面的interceptorNames是在配置文件中
-			//通过interceptorNames进行配置的
+			//通过interceptorNames进行配置的。由于每一个Advisor都是被配置为bean的，
+			//所以通过遍历interceptorNames得到的name，其实就是bean的id，通过这个name（id）
+			//我们就可以从IoC容器中获取对应的实例化bean
 			for (String name : this.interceptorNames) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Configuring advisor or advice '" + name + "'");
@@ -441,14 +443,16 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 					//对当前的factoryBean进行类型判断，是属于单例bean还是原型bean
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {
-						//通过beanFactory的getBean()方法获取advisor，
-						//这个name是从interceptorNames中获取的
+						//advisor在文件中配置为bean，所以这里通过beanFactory的getBean()方法
+						//获取advisor，这个name是从interceptorNames中获取的
 						advice = this.beanFactory.getBean(name);
 					}
 					else {
 						//如果是原型bean
 						advice = new PrototypePlaceholderAdvisor(name);
 					}
+					//把从IoC容器中获取的advice放进advisors拦截器链，这个拦截器链是由ProxyFactoryBean
+					//的父类AdvisedSupport持有的
 					addAdvisorOnChainCreation(advice, name);
 				}
 			}

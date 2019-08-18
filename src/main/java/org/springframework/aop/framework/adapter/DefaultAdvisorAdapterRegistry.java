@@ -44,7 +44,6 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 	//实现spring AOP的advice增强功能相对应
 	private final List<AdvisorAdapter> adapters = new ArrayList<AdvisorAdapter>(3);
 
-
 	/**
 	 * 将已实现的AdviceAdapter加入list
 	 */
@@ -54,7 +53,9 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		registerAdvisorAdapter(new ThrowsAdviceAdapter());
 	}
 
-
+	/**
+	 * 如果adviceObject是Advisor的实例，则将adviceObject转换成Advisor类型并返回
+	 */
 	public Advisor wrap(Object adviceObject) throws UnknownAdviceTypeException {
 		if (adviceObject instanceof Advisor) {
 			return (Advisor) adviceObject;
@@ -64,11 +65,9 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		}
 		Advice advice = (Advice) adviceObject;
 		if (advice instanceof MethodInterceptor) {
-			// So well-known it doesn't even need an adapter.
 			return new DefaultPointcutAdvisor(advice);
 		}
 		for (AdvisorAdapter adapter : this.adapters) {
-			// Check that it is supported.
 			if (adapter.supportsAdvice(advice)) {
 				return new DefaultPointcutAdvisor(advice);
 			}
@@ -87,7 +86,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 			interceptors.add((MethodInterceptor) advice);
 		}
 		
-		//对通知进行适配，使用已经配置好的三种AdvisorAdapter，然后从对应的
+		//对advice的类型进行适配，使用已经配置好的三种AdvisorAdapter，然后从对应的
 		//adapter中取出封装好的AOP编织功能的拦截器
 		for (AdvisorAdapter adapter : this.adapters) {
 			//adapter.supportsAdvice(advice)方法中对advice的

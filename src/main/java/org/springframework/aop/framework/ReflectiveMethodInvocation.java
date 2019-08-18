@@ -75,10 +75,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	 */
 	private Map<String, Object> userAttributes;
 
-	/**
-	 * List of MethodInterceptor and InterceptorAndDynamicMethodMatcher
-	 * that need dynamic checks.
-	 */
+	/** MethodInterceptor和InterceptorAndDynamicMethodMatcher的集合 */
 	protected final List interceptorsAndDynamicMethodMatchers;
 
 	/**
@@ -145,24 +142,25 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 
 
 	public Object proceed() throws Throwable {
-		//从索引为-1的拦截器开始调用，并按序递增
-		//如果拦截器链中的拦截器依次调用完毕，则开始调用目标方法，
-		//对目标方法的调用是在invokeJoinpoint()中利用反射完成的
+		//从拦截器链中按顺序依次调用拦截器，直到所有的拦截器调用完毕，开始调用目标方法，
+		//对目标方法的调用是在invokeJoinpoint()中通过AopUtils的invokeJoinpointUsingReflection()方法完成的
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+			//invokeJoinpoint()直接通过AopUtils进行目标方法的调用
 			return invokeJoinpoint();
 		}
 
 		//这里沿着定义好的interceptorsAndDynamicMethodMatchers拦截器链进行处理，
-		//它是一个List，interceptorOrInterceptionAdvice是其中的一个元素，
+		//它是一个List，也没有定义泛型，interceptorOrInterceptionAdvice是其中的一个元素，
 		Object interceptorOrInterceptionAdvice =
 				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
-			//这里对拦截器进行动态方法匹配的判断，触发对Pointcut的匹配，
-			//如果和配置的Pointcut匹配，那么这个advice将会被执行，
+			//这里通过拦截器的方法匹配器methodMatcher进行方法匹配，
+			//如果目标类的目标方法和配置的Pointcut匹配，那么这个增强行为advice将会被执行，
 			//Pointcut定义了切面，advice定义了增强的行为
 			InterceptorAndDynamicMethodMatcher dm = (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
-			//是否是配置中定义的切面
+			//目标类的目标方法是否为Pointcut所定义的切面
 			if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
+				//执行增强方法
 				return dm.interceptor.invoke(this);
 			}
 			else {

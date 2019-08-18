@@ -29,12 +29,9 @@ import org.aopalliance.aop.Advice;
 @SuppressWarnings("serial")
 public abstract class AbstractGenericPointcutAdvisor extends AbstractPointcutAdvisor {
 
+	//在抽象类中持有Advice的引用，在具体的子类中持有对Pointcut的引用
 	private Advice advice;
 
-
-	/**
-	 * Specify the advice that this advisor should apply.
-	 */
 	public void setAdvice(Advice advice) {
 		this.advice = advice;
 	}
@@ -42,7 +39,6 @@ public abstract class AbstractGenericPointcutAdvisor extends AbstractPointcutAdv
 	public Advice getAdvice() {
 		return this.advice;
 	}
-
 
 	@Override
 	public String toString() {

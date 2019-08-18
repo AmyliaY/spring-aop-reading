@@ -615,7 +615,7 @@ final class CglibAopProxy implements AopProxy, Serializable {
 				if (target != null) {
 					targetClass = target.getClass();
 				}
-				//从advice对象中获取配置好的拦截器链，advised是一个AdvisedSupport对象，
+				//从advised对象中获取配置好的拦截器链，advised是一个AdvisedSupport对象，
 				//而AdvisedSupport也是ProxyFactoryBean的父类之一。
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
