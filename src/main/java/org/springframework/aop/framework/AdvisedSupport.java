@@ -81,7 +81,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	/** The AdvisorChainFactory to use */
 	AdvisorChainFactory advisorChainFactory = new DefaultAdvisorChainFactory();
 
-	/** Cache with Method as key and advisor chain List as value */
+	/** 缓存 Method对象 和其对应的 拦截器链列表List<Advisor> */
 	private transient Map<MethodCacheKey, List<Object>> methodCache;
 
 	/**

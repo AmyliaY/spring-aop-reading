@@ -57,30 +57,22 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 
 	private static final Log logger = LogFactory.getLog(ThrowsAdviceInterceptor.class);
 
-
 	private final Object throwsAdvice;
 
-	/** Methods on throws advice, keyed by exception class */
 	private final Map<Class, Method> exceptionHandlerMap = new HashMap<Class, Method>();
 
-
-	/**
-	 * Create a new ThrowsAdviceInterceptor for the given ThrowsAdvice.
-	 * @param throwsAdvice the advice object that defines the exception
-	 * handler methods (usually a {@link org.springframework.aop.ThrowsAdvice}
-	 * implementation)
-	 */
 	public ThrowsAdviceInterceptor(Object throwsAdvice) {
 		Assert.notNull(throwsAdvice, "Advice must not be null");
 		this.throwsAdvice = throwsAdvice;
 
+		// 配置 throwsAdvice 的回调
 		Method[] methods = throwsAdvice.getClass().getMethods();
 		for (Method method : methods) {
 			if (method.getName().equals(AFTER_THROWING) &&
 					(method.getParameterTypes().length == 1 || method.getParameterTypes().length == 4) &&
 					Throwable.class.isAssignableFrom(method.getParameterTypes()[method.getParameterTypes().length - 1])
 				) {
-				// Have an exception handler
+				// 配置异常处理
 				this.exceptionHandlerMap.put(method.getParameterTypes()[method.getParameterTypes().length - 1], method);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Found exception handler method: " + method);
@@ -120,6 +112,8 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	}
 
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		// 把对目标对象的方法调用放入 try/catch 中，并在 catch 中触发
+		// throwsAdvice 的回调，把异常接着向外抛，不做过多处理
 		try {
 			return mi.proceed();
 		}

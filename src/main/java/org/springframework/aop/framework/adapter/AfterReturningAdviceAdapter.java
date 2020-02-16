@@ -25,9 +25,7 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.AfterReturningAdvice;
 
 /**
- * Adapter to enable {@link org.springframework.aop.AfterReturningAdvice}
- * to be used in the Spring AOP framework.
- *
+ * 将 AfterReturningAdvice 适配成 AfterReturningAdviceInterceptor 的适配器
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
@@ -42,5 +40,4 @@ class AfterReturningAdviceAdapter implements AdvisorAdapter, Serializable {
 		AfterReturningAdvice advice = (AfterReturningAdvice) advisor.getAdvice();
 		return new AfterReturningAdviceInterceptor(advice);
 	}
-
 }

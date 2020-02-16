@@ -155,7 +155,12 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 			}
 		}
 
-		// 
+		// 加入Advisor通知器，可以加入两种通知器，分别是：
+		// DefaultPointcutAdvisor、TransactionAttributeSourceAdvisor
+		// 这里通过调用TransactionProxyFactoryBean实例的createMainInterceptor()方法
+		// 来生成需要的Advisors。在ProxyFactory的基类AdvisedSupport中维护了一个持有Advisor
+		// 的链表LinkedList<Advisor>，通过对这个链表中的元素执行增、删、改等操作，用来管理
+		// 配置给ProxyFactory的通知器
 		proxyFactory.addAdvisor(this.advisorAdapterRegistry.wrap(createMainInterceptor()));
 
 		if (this.postInterceptors != null) {
@@ -166,6 +171,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 
 		proxyFactory.copyFrom(this);
 
+		// 这里创建AOP的目标源，与在其它地方使用ProxyFactory没什么差别
 		TargetSource targetSource = createTargetSource(this.target);
 		proxyFactory.setTargetSource(targetSource);
 
@@ -173,11 +179,12 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 			proxyFactory.setInterfaces(this.proxyInterfaces);
 		}
 		else if (!isProxyTargetClass()) {
-			// Rely on AOP infrastructure to tell us what interfaces to proxy.
+			// 需要根据AOP基础设施来确定使用哪个接口作为代理
 			proxyFactory.setInterfaces(
 					ClassUtils.getAllInterfacesForClass(targetSource.getTargetClass(), this.proxyClassLoader));
 		}
 
+		// 设置代理对象
 		this.proxy = proxyFactory.getProxy(this.proxyClassLoader);
 	}
 
@@ -196,7 +203,8 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 		}
 	}
 
-
+	// 返回的是一个proxy代理对象，这个proxy是ProxyFactory生成的AOP代理，
+	// 已经封装了对事务处理的拦截器配置
 	public Object getObject() {
 		if (this.proxy == null) {
 			throw new FactoryBeanNotInitializedException();

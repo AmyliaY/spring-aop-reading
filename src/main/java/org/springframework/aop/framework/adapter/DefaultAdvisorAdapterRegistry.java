@@ -37,15 +37,21 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
  * @author Rob Harrop
  * @author Juergen Hoeller
  */
+
+/**
+ * 本类的 getInterceptors() 方法使用上述 适配器组件，完成了从 Advice 到 MethodInterceptor 的适配工作
+ */
 @SuppressWarnings("serial")
 public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
 
-	//持有AdvisorAdapter的list，这个list中的AdvisorAdapter与
-	//实现spring AOP的advice增强功能相对应
+	/**
+	 * 持有AdvisorAdapter的list，这个list中的AdvisorAdapter与
+	 * 实现 spring AOP 的 Advice 增强功能相对应
+	 */
 	private final List<AdvisorAdapter> adapters = new ArrayList<AdvisorAdapter>(3);
 
 	/**
-	 * 将已实现的AdviceAdapter加入list
+	 * 将已实现的 AdviceAdapter 加入 list
 	 */
 	public DefaultAdvisorAdapterRegistry() {
 		registerAdvisorAdapter(new MethodBeforeAdviceAdapter());
@@ -53,6 +59,37 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		registerAdvisorAdapter(new ThrowsAdviceAdapter());
 	}
 
+	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
+		List<MethodInterceptor> interceptors = new ArrayList<MethodInterceptor>(3);
+		
+		// 从Advisor通知器中获取配置的Advice
+		Advice advice = advisor.getAdvice();
+		
+		// 如果advice是MethodInterceptor类型的，直接加进interceptors，不用适配
+		if (advice instanceof MethodInterceptor) {
+			interceptors.add((MethodInterceptor) advice);
+		}
+		
+		// 如果advice不是MethodInterceptor类型的，就将其适配成MethodInterceptor，
+		// 当前的DefaultAdvisorAdapterRegistry对象 在初始化时就已经为 adapters 添加了
+		// 三种 AdvisorAdapter 的实例
+		for (AdvisorAdapter adapter : this.adapters) {
+			// 依次使用 adapters集合中的 adapter 对 advice 进行适配
+			// 将其适配成 MethodInterceptor 对象
+			if (adapter.supportsAdvice(advice)) {
+				interceptors.add(adapter.getInterceptor(advisor));
+			}
+		}
+		if (interceptors.isEmpty()) {
+			throw new UnknownAdviceTypeException(advisor.getAdvice());
+		}
+		return interceptors.toArray(new MethodInterceptor[interceptors.size()]);
+	}
+
+	public void registerAdvisorAdapter(AdvisorAdapter adapter) {
+		this.adapters.add(adapter);
+	}
+	
 	/**
 	 * 如果adviceObject是Advisor的实例，则将adviceObject转换成Advisor类型并返回
 	 */
@@ -74,35 +111,4 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		}
 		throw new UnknownAdviceTypeException(advice);
 	}
-
-	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
-		List<MethodInterceptor> interceptors = new ArrayList<MethodInterceptor>(3);
-		
-		//从Advisor通知器中获取配置的Advice
-		Advice advice = advisor.getAdvice();
-		
-		//如果advice是MethodInterceptor类型的，直接加进interceptors，不用适配
-		if (advice instanceof MethodInterceptor) {
-			interceptors.add((MethodInterceptor) advice);
-		}
-		
-		//对advice的类型进行适配，使用adapters中已经配置好的三种AdvisorAdapter，然后从对应的
-		//adapter中取出封装好的AOP编织功能的拦截器
-		for (AdvisorAdapter adapter : this.adapters) {
-			//adapter.supportsAdvice(advice)方法中对advice的
-			//类型进行校验
-			if (adapter.supportsAdvice(advice)) {
-				interceptors.add(adapter.getInterceptor(advisor));
-			}
-		}
-		if (interceptors.isEmpty()) {
-			throw new UnknownAdviceTypeException(advisor.getAdvice());
-		}
-		return interceptors.toArray(new MethodInterceptor[interceptors.size()]);
-	}
-
-	public void registerAdvisorAdapter(AdvisorAdapter adapter) {
-		this.adapters.add(adapter);
-	}
-
 }

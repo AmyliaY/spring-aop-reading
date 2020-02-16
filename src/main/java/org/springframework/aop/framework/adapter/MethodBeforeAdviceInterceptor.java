@@ -48,10 +48,9 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 	 * 这个invoke方法是拦截器的回调方法，会在代理对象的方法被调用时触发回调
 	 */
 	public Object invoke(MethodInvocation mi) throws Throwable {
-		//首先触发了advice的before()方法的回调
-		//然后才是MethodInvocation的process()方法回调
+		// 首先触发了advice的before()方法的回调
+		// 然后才是MethodInvocation的process()方法回调
 		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );
 		return mi.proceed();
 	}
-
 }
